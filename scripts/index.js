@@ -48,18 +48,40 @@ const createListTodo = () => {
 	return listTodo;
 };
 
-const createItemTodo = (titleItem) => {
+const createItemTodo = (id, titleItem) => {
 	const itemTodo = document.createElement('li');
 	const btnItem = document.createElement('button');
 
 	itemTodo.classList.add('list-group-item', 'p-0', 'mb-3', 'border-0');
 	btnItem.classList.add('btn', 'btn-light', 'btn-block', 'border-primary', 'rounded-pill')
 	btnItem.textContent = titleItem;
+	btnItem.id = id;
 	itemTodo.append(btnItem);
 
 	return itemTodo;
 };
 
+const addTodoItem = (todoData, listTodo, nameTodo, descriptionTodo) => {
+	const id = `todo${(+new Date()).toString(16)}`;
+	const itemTodo = createItemTodo(id, nameTodo);
+
+	todoData.push({ id, nameTodo, descriptionTodo });
+
+	listTodo.append(itemTodo);
+	console.log(todoData);
+};
+
+const createModal = () => {
+	const modal = document.createElement('div');
+	modal.innerHTML = `
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<h2 class="modal-header">${}</h2>
+			
+		</div>
+	</div> 
+	`;
+};
 
 const initTodo = (selector, titleTodo) => {
 	const todoData = [];
@@ -79,8 +101,7 @@ const initTodo = (selector, titleTodo) => {
 		formTodo.textArea.classList.remove('is-invalid');
 
 		if (formTodo.input.value && formTodo.textArea.value) {
-			const itemTodo = createItemTodo(formTodo.input.value);
-			listTodo.append(itemTodo);
+			addTodoItem(todoData, listTodo, formTodo.input.value, formTodo.textArea.value)
 			formTodo.form.reset();
 		}
 		else {
