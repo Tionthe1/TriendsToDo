@@ -72,15 +72,57 @@ const addTodoItem = (todoData, listTodo, nameTodo, descriptionTodo) => {
 };
 
 const createModal = () => {
-	const modal = document.createElement('div');
-	modal.innerHTML = `
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<h2 class="modal-header">${}</h2>
-			
-		</div>
-	</div> 
-	`;
+	const modalElem = document.createElement('div');
+	const modalDialog = document.createElement('div');
+	const modalContent = document.createElement('div');
+	const modalHeader = document.createElement('div');
+	const modalBody = document.createElement('div');
+	const modalFooter = document.createElement('div');
+	const itemTitle = document.createElement('h2');
+	const itemDescription = document.createElement('p');
+	const btnClose = document.createElement('button');
+	const btnReady = document.createElement('button');
+	const btnDelete = document.createElement('button');
+
+	modalElem.classList.add('modal')
+	modalDialog.classList.add('modal-dialog')
+	modalContent.classList.add('modal-content')
+	modalHeader.classList.add('modal-header')
+	modalBody.classList.add('modal-body')
+	modalFooter.classList.add('modal-footer')
+	itemTitle.classList.add('modal-title')
+	btnClose.classList.add('close')
+	btnReady.classList.add('btn', 'btn-success')
+	btnDelete.classList.add('btn', 'btn-danger', 'btn-delete')
+	btnClose.innerHTML = '&times;';
+	btnReady.textContent = 'Выполнено';
+	btnDelete.textContent = 'Удалить';
+
+	modalDialog.append(modalContent);
+	modalContent.append(modalHeader, modalBody, modalFooter);
+	modalHeader.append(itemTitle, btnClose);
+	modalBody.append(itemDescription);
+	modalFooter.append(btnReady, btnDelete);
+
+	modalElem.append(modalDialog);
+
+	const closeModal = event => {
+		const target = event.target;
+
+		if (target === btnClose || target === modalElem) {
+			modalElem.classList.remove('d-block');
+		}
+	};
+
+	btnClose.addEventListener('click', closeModal);
+
+	const showModal = (titleTodo, descriptionTodo) => {
+		modal.classList.add('d-block');
+		itemTitle.textContent = titleTodo;
+		itemDescription.textContent = descriptionTodo;
+	}
+
+	return { modalElem, btnReady, btnDelete, showModal };
 };
 
 const initTodo = (selector, titleTodo) => {
@@ -89,9 +131,10 @@ const initTodo = (selector, titleTodo) => {
 	const wrapper = document.querySelector(selector);
 	const formTodo = createFormTodo();
 	const listTodo = createListTodo();
-
+	const modal = createModal();
 	const todoApp = createToDo(titleTodo, formTodo.form, listTodo);
 
+	document.body.append(modal.modalElem);
 	wrapper.append(todoApp);
 
 	formTodo.form.addEventListener('submit', event => {
@@ -113,6 +156,6 @@ const initTodo = (selector, titleTodo) => {
 			}
 		}
 	})
-}
+};
 
 initTodo('.app', 'Список дел');
